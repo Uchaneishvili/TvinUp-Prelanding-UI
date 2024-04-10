@@ -131,32 +131,58 @@ export const Logo = () => {
 }
 export const Check = () => {
   return (
-    <svg width="57" height="57" viewBox="0 0 57 57" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <g clip-path="url(#clip0_0_4358)">
-      <path d="M23.7214 35.7523L45.1412 14.2007L48.4385 17.5157L23.7214 42.3822L8.8916 27.4627L12.1866 24.1478L23.7214 35.7523Z" fill="#00CC99"/>
+    <svg
+      width='57'
+      height='57'
+      viewBox='0 0 57 57'
+      fill='none'
+      xmlns='http://www.w3.org/2000/svg'
+    >
+      <g clip-path='url(#clip0_0_4358)'>
+        <path
+          d='M23.7214 35.7523L45.1412 14.2007L48.4385 17.5157L23.7214 42.3822L8.8916 27.4627L12.1866 24.1478L23.7214 35.7523Z'
+          fill='#00CC99'
+        />
       </g>
       <defs>
-      <clipPath id="clip0_0_4358">
-      <rect width="55.9263" height="56.2644" fill="white" transform="translate(0.418945 0.183899)"/>
-      </clipPath>
+        <clipPath id='clip0_0_4358'>
+          <rect
+            width='55.9263'
+            height='56.2644'
+            fill='white'
+            transform='translate(0.418945 0.183899)'
+          />
+        </clipPath>
       </defs>
     </svg>
-  );
-};
+  )
+}
 
 export const Close = () => {
   return (
-    <svg width="57" height="57" viewBox="0 0 57 57" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <g clip-path="url(#clip0_0_4369)">
-      <path d="M28.3835 25.0008L39.9183 13.3963L43.2133 16.7112L31.6785 28.3157L43.2133 39.9203L39.9183 43.2352L28.3835 31.6306L16.8487 43.2352L13.5537 39.9203L25.0885 28.3157L13.5537 16.7112L16.8487 13.3963L28.3835 25.0008Z" fill="#EB5757"/>
+    <svg
+      width='57'
+      height='57'
+      viewBox='0 0 57 57'
+      fill='none'
+      xmlns='http://www.w3.org/2000/svg'
+    >
+      <g clip-path='url(#clip0_0_4369)'>
+        <path
+          d='M28.3835 25.0008L39.9183 13.3963L43.2133 16.7112L31.6785 28.3157L43.2133 39.9203L39.9183 43.2352L28.3835 31.6306L16.8487 43.2352L13.5537 39.9203L25.0885 28.3157L13.5537 16.7112L16.8487 13.3963L28.3835 25.0008Z'
+          fill='#EB5757'
+        />
       </g>
       <defs>
-      <clipPath id="clip0_0_4369">
-      <rect width="55.9263" height="56.2644" fill="white" transform="translate(0.419922 0.183594)"/>
-      </clipPath>
+        <clipPath id='clip0_0_4369'>
+          <rect
+            width='55.9263'
+            height='56.2644'
+            fill='white'
+            transform='translate(0.419922 0.183594)'
+          />
+        </clipPath>
       </defs>
     </svg>
-  );
-};
-
-
+  )
+}
