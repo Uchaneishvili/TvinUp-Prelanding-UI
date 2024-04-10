@@ -4,7 +4,7 @@ import {
   subscribe,
   getQuantity,
 } from '../services/SubscribeService'
-import { Facebook, LinkedIn, Mute, Unmute, Logo } from '../icon/icon'
+import { Facebook, LinkedIn, Mute, Unmute, Logo, Check, Close } from '../icon/icon'
 import { useDebounceFn } from '../hooks/debounce'
 
 const Main = () => {
@@ -78,13 +78,13 @@ const Main = () => {
     switch (statusCode) {
       case 200:
       case 201:
-        return 'გამოწერილია წარმატებით'
+        return 'წარმატება თქვენ წარმატებით გახდით TvinUP-ელი !'
       case 409:
-        return 'ელ-ფოსტა უკვე ჩანიშნულია'
+        return 'თქვენი ელ.ფოსტა უკვე ჩანიშნული გვაქვს'
       case 400:
         return 'Bad request. Please check your email.'
       case 500:
-        return 'Internal server error. Please try again later.'
+        return 'შეცდომა დაფიქსირდა ტექნიკური ხარვეზი'
       default:
         return ''
     }
@@ -112,19 +112,29 @@ const Main = () => {
         ref={videoRef}
         className='w-full h-full object-cover'
       />
-
       <div className='absolute w-full h-full flex flex-col top-0 justify-center items-center'>
-        {showMessage && (
-          <div
-            className={`absolute top-0 right-2 message-box text-white mt-4 flex mb-1 rounded-lg justify-center items-center p-3 ${
-              subscriptionStatus === 200 || emailStatus === 200
-                ? 'bg-[#42ee5c]'
-                : 'bg-red-500'
-            } `}
-            style={{ animation: 'slide-in-right 0.5s forwards' }}
-          >
-            {getMessageForStatus(subscriptionStatus || emailStatus)}
-          </div>
+      {showMessage && (
+        <div className="absolute top-0 right-2 message-box mt-4 flex mb-1 rounded-lg justify-center items-center p-3">
+            {subscriptionStatus === 200 || emailStatus === 200 ? (
+            <div className="flex justify-between items-center bg-green-100 border-l-4 border-green-500 text-green-700 p-2 py-3 rounded-lg" style={{ animation: 'slide-in-right 0.5s forwards' }}>
+                <Check/>
+                <div className='flex flex-col justify-center items-start'>
+                    <p className="text-lg font-semibold">წარმატება</p>
+                    <p>თქვენ წარმატებით გახდით TvinUP-ელი !</p>
+                </div>
+            </div>
+            ) : (
+            <div className="flex justify-between items-center bg-red-100 border-l-4 border-red-500 text-red-700 p-2 py-3 rounded-lg" style={{ animation: 'slide-in-right 0.5s forwards' }}>
+                <Close/>
+                <div className='flex flex-col justify-center items-start'>
+                    <p className="text-lg font-semibold">შეცდომა</p>
+                    <p>
+                    {getMessageForStatus(subscriptionStatus || emailStatus)}
+                    </p>
+                </div>
+            </div>
+            )}
+        </div>
         )}
         <div className='bg-[#0000004b] px-2 py-4 flex flex-col justify-center items-center rounded-xl drop-shadow-2xl gap-3'>
           <div className='flex flex-col items-center justify-center gap-1'>
