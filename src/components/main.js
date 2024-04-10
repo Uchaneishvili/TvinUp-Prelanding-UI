@@ -4,10 +4,8 @@ import {
   subscribe,
   getQuantity,
 } from '../services/SubscribeService'
-import MuteIcon from '../assets/audio.png'
-import UnMuteIcon from '../assets/volume.png'
-import Facebook from '../assets/facebook.png'
-import LinkedIn from '../assets/linkedin.png'
+import { Facebook, LinkedIn, Mute, Unmute, Logo } from '../icon/icon'
+import { useDebounceFn } from '../hooks/debounce'
 
 const Main = () => {
   const [email, setEmail] = useState('')
@@ -16,6 +14,7 @@ const Main = () => {
   const [emailStatus, setEmailStatus] = useState(null)
   const [showMessage, setShowMessage] = useState(false)
   const [quantity, setQuantity] = useState()
+  const [submitted, setSubmitted] = useState()
   const videoRef = useRef(null)
 
   const getEmailQuantity = useCallback(async () => {
@@ -33,6 +32,8 @@ const Main = () => {
 
   useEffect(() => {
     if (subscriptionStatus !== null || emailStatus !== null) {
+      getEmailQuantity()
+
       setShowMessage(true)
       const timeout = setTimeout(() => {
         setShowMessage(false)
@@ -41,12 +42,14 @@ const Main = () => {
       }, 5000) // Change the timeout duration (in milliseconds) as needed
       return () => clearTimeout(timeout)
     }
-  }, [subscriptionStatus, emailStatus])
+  }, [subscriptionStatus, emailStatus, getEmailQuantity])
 
   const subscribeWebsite = async () => {
     try {
       const res = await subscribe({ email: email })
       setSubscriptionStatus(res.status)
+      setEmail('')
+      setSubmitted(false)
     } catch (err) {
       console.log('Error subscribing:', err)
       setSubscriptionStatus(err.response ? err.response.status : 500)
@@ -88,10 +91,17 @@ const Main = () => {
   }
 
   const isEmailValid = (email) => {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+    const emailRegex = /^[a-z0-9.+-]+@[a-z0-9.-]+\.[a-z]{2,}$/
     return emailRegex.test(email)
   }
 
+  const onSubmit = () => {
+    setSubmitted(true)
+    subscribeWebsite()
+    addEndSendEmails()
+  }
+
+  const handleOnSubmit = useDebounceFn(onSubmit, 300)
   return (
     <div className='main w-[100%] h-[100vh]'>
       <video
@@ -122,12 +132,17 @@ const Main = () => {
             <span className='text-4xl text-[#f74242] font-extrabold'>
               {quantity}
             </span>
-            <span className='text-2xl text-white font-bold'>TvinUP-ელი</span>
+            <span className='text-2xl text-white font-bold flex items-center'>
+              <span>
+                <Logo />
+              </span>
+              <span>-ელი</span>
+            </span>
           </div>
           <div className='flex lg:w-[90%] justify-center text-center items-center p-2 md:text-xl text-white font-bold'>
             <span>
               დაგვიტოვე ელ.ფოსტა და როგორც კი გავეშვებით პირველი შენ გაცნობებთ
-              🙂
+              🚀
             </span>
           </div>
 
@@ -137,19 +152,34 @@ const Main = () => {
           >
             <div className='mb-5 w-full'>
               <input
-                type='email'
-                id='email'
+                type='text'
                 className='bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5 px-3 outline-none'
-                placeholder='your@email.com'
-                required
+                placeholder='შეიყვანეთ ელ.ფოსტა'
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
               />
+
+              <span
+                className={`mt-1 text-sm ${
+                  email && !/^[a-z0-9.+-]+@[a-z0-9.-]+\.[a-z]{2,}$/.test(email)
+                    ? 'text-[rgb(254,80,0)]'
+                    : 'hidden'
+                }`}
+              >
+                გთხოვთ შეიყვანოთ სწორი ელ.ფოსტა.
+              </span>
+
+              <span
+                className={`mt-1 text-sm ${
+                  submitted && !email ? 'text-[rgb(254,80,0)]' : 'hidden'
+                }`}
+              >
+                ველის შევსება სავალდებულოა.
+              </span>
             </div>
             <button
               onClick={() => {
-                subscribeWebsite()
-                addEndSendEmails()
+                handleOnSubmit()
               }}
               className={`font-medium rounded-lg text-sm sm:w-auto px-5 py-2.5 text-center bg-[#FCD567] w-full hover:bg-[#e0b84e] transition-colors duration-300 text-black ${
                 !isEmailValid(email) ? 'opacity-50 cursor-not-allowed' : ''
@@ -160,12 +190,12 @@ const Main = () => {
             </button>
           </form>
           <div className='flex lg:w-[50%] w-full justify-around items-center'>
-            <div className='flex justify-between items-center gap-1 hover:cursor-pointer'>
-              <img src={Facebook} alt='FB' />
+            <div className='flex justify-between items-center gap-1 hover:cursor-pointer '>
+              <Facebook />
               <span className='text-white'>Facebook</span>
             </div>
             <div className='flex justify-between items-center gap-1 hover:cursor-pointer'>
-              <img src={LinkedIn} alt='LinkedIn' />
+              <LinkedIn />
               <span className='text-white'>LinkedIn</span>
             </div>
           </div>
@@ -175,11 +205,8 @@ const Main = () => {
         onClick={toggleVideoMuted}
         className='absolute flex justify-center items-center gap-2 top-4 left-4 bg-[#0000004b] text-white p-2 rounded-full z-10'
       >
+        {isVideoMuted ? <Unmute /> : <Mute />}
         {isVideoMuted ? 'ხმის ჩართვა' : 'ხმის გამორთვა'}
-        <img
-          src={isVideoMuted ? MuteIcon : UnMuteIcon}
-          alt={isVideoMuted ? 'Unmute Video' : 'Mute Video'}
-        />
       </button>
     </div>
   )
