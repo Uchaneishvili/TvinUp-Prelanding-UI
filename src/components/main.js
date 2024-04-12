@@ -12,7 +12,9 @@ import {
   Logo,
   Check,
   Close,
+  Youtube,
 } from '../icon/icon'
+import WaitingRoomImage from '../assets/waiting_room.jpeg';
 import { useDebounceFn } from '../hooks/debounce'
 
 const Main = () => {
@@ -24,6 +26,18 @@ const Main = () => {
   const [quantity, setQuantity] = useState()
   const [submitted, setSubmitted] = useState()
   const videoRef = useRef(null)
+  const [isSmallScreen, setIsSmallScreen] = useState(false);
+
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsSmallScreen(window.innerWidth <= 1024); 
+    };
+    handleResize(); 
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
 
   const getEmailQuantity = useCallback(async () => {
     try {
@@ -47,7 +61,7 @@ const Main = () => {
         setShowMessage(false)
         setSubscriptionStatus(null)
         setEmailStatus(null)
-      }, 5000) // Change the timeout duration (in milliseconds) as needed
+      }, 5000) // Change the timeout duration as needed
       return () => clearTimeout(timeout)
     }
   }, [subscriptionStatus, emailStatus, getEmailQuantity])
@@ -110,14 +124,22 @@ const Main = () => {
   const handleOnSubmit = useDebounceFn(onSubmit, 300)
   return (
     <div className='main w-[100%] h-[100vh]'>
-      <video
-        src='background_video.mp4'
-        autoPlay
-        loop
-        muted={isVideoMuted}
-        ref={videoRef}
-        className='w-full h-full object-cover'
-      />
+      {isSmallScreen ? (
+        <img
+          src={WaitingRoomImage}
+          alt='Background'
+          className='w-full h-full object-cover'
+        />
+      ) : (
+        <video
+          src='background_video.mp4'
+          autoPlay
+          loop
+          muted={isVideoMuted}
+          ref={videoRef}
+          className='w-full h-full object-cover'
+        />
+      )}
       <div className='absolute w-full h-full flex flex-col top-0 justify-center items-center'>
         {showMessage && (
           <div className='absolute top-0 right-2 message-box mt-4 flex mb-1 rounded-lg justify-center items-center p-3'>
@@ -211,21 +233,34 @@ const Main = () => {
               დადასტურება
             </button>
           </form>
-          <div className='flex lg:w-[50%] w-full justify-around items-center'>
-            <div className='flex justify-between items-center gap-1 hover:cursor-pointer '>
-              <Facebook />
-              <span className='text-white'>Facebook</span>
-            </div>
-            <div className='flex justify-between items-center gap-1 hover:cursor-pointer'>
+          <div className='flex w-full justify-around items-center'>
+            <a className='flex justify-between items-center gap-1 hover:cursor-pointer'
+                href='https://www.facebook.com/tvinup'
+                target='_blank'
+                rel='noopener noreferrer'>
+                <Facebook />
+                <span className='text-white'>Facebook</span>
+            </a>
+            <a className='flex justify-between items-center gap-1 hover:cursor-pointer'
+                href='https://www.youtube.com/@TvinUp'
+                target='_blank'
+                rel='noopener noreferrer'>
+              <Youtube />
+              <span className='text-white'>Youtube</span>
+            </a>
+            <a className='flex justify-between items-center gap-1 hover:cursor-pointer'
+               href='https://www.linkedin.com/company/tvinup/'
+               target='_blank'
+               rel='noopener noreferrer'>
               <LinkedIn />
               <span className='text-white'>LinkedIn</span>
-            </div>
+            </a>
           </div>
         </div>
       </div>
-      <button
+        <button
         onClick={toggleVideoMuted}
-        className='absolute flex justify-center items-center gap-2 top-4 left-4 bg-[#0000004b] text-white p-2 rounded-full z-10'
+        className='absolute hidden lg:flex justify-center items-center gap-2 top-4 left-4 bg-[#0000004b] text-white p-2 rounded-full z-10'
       >
         {isVideoMuted ? <Unmute /> : <Mute />}
         {isVideoMuted ? 'ხმის ჩართვა' : 'ხმის გამორთვა'}
